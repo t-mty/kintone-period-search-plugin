@@ -85,7 +85,7 @@ function setValue($, config) {
   //現在のクエリの日付を取得
   var query = kintone.app.getQueryCondition(); //現在のクエリ文字列を取得
   var regexStart = new RegExp(`${fieldCode} >= "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //開始日の正規表現
-  var regexEnd = new RegExp(`${fieldCode} <= "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //終了日の正規表現
+  var regexEnd = new RegExp(`${fieldCode} < "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //終了日の正規表現
   if(regexStart.test(query)){
     startDate = query.match(regexStart)[0].match(/"(.+)"/g)[0].replace(/"/g, '');
   }
@@ -114,28 +114,41 @@ function getStringFromDate(d) {
 //検索
 function searchDate($, e, config) {
   const startDate = $('.start-date').val();
-  const endDate = $('.end-date').val();
+
+  var date = new Date($('.end-date').val());
+  date.setDate(date.getDate() + 1);
+  var year = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd = date.getDate().toString();
+  var yyyymmdd = year + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+  const endDate = yyyymmdd;
+
+  // var endDate = $('.end-date');
+  // var a = endDate.valueAsDate;
+  // endDate.valueAsDate = a.setDate(a.getDate()+1);
+  // const endDate = $('.end-date').val();
+
   var fieldCode = config.fieldCode; //対象のフィールドを宣言
 
   // クエリ文字列生成
   const createQueryString = (startDate, endDate, fieldCode) => {  
     var query = kintone.app.getQueryCondition(); //現在のクエリ文字列を取得
     var regexStart = new RegExp(`${fieldCode} >= "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //開始日の正規表現
-    var regexEnd = new RegExp(`${fieldCode} <= "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //終了日の正規表現
+    var regexEnd = new RegExp(`${fieldCode} < "[0-9]{4}-[0-9]{2}-[0-9]{2}"`); //終了日の正規表現
 
     if (query === ''){ //現在クエリが未指定の時
-      query = fieldCode +' >= "' + startDate + '" and ' + fieldCode +' <= "'+ endDate + '"'; //開始日と終了日を設定する
+      query = fieldCode +' >= "' + startDate + '" and ' + fieldCode +' < "'+ endDate + '"'; //開始日と終了日を設定する
     }else if(regexStart.test(query) && regexEnd.test(query)){
       query = query.replace(regexStart, fieldCode + '>= "' + startDate + '"'); // 開始日を変更
-      query = query.replace(regexEnd, fieldCode + '<= "' + endDate + '"'); // 終了日を変更
+      query = query.replace(regexEnd, fieldCode + '< "' + endDate + '"'); // 終了日を変更
     }else if(regexStart.test(query)) {
       query = query.replace(regexStart, fieldCode + '>= "' + startDate + '"'); // 開始日を変更
-      query = query + ' and ' + fieldCode +' <= "'+ endDate + '"'; //終了日を追加
+      query = query + ' and ' + fieldCode +' < "'+ endDate + '"'; //終了日を追加
     }else if(regexEnd.test(query)){
       query = query + ' and ' + fieldCode +' >= "' + startDate + '"'; //開始日を追加
-      query = query.replace(regexEnd, fieldCode + '<= "' + endDate + '"'); // 終了日を変更
+      query = query.replace(regexEnd, fieldCode + '< "' + endDate + '"'); // 終了日を変更
     }else{
-      query = query + ' and ' + fieldCode +' >= "' + startDate + '" and ' + fieldCode +' <= "'+ endDate + '"'; //既存のクエリに開始日と終了日を追加する
+      query = query + ' and ' + fieldCode +' >= "' + startDate + '" and ' + fieldCode +' < "'+ endDate + '"'; //既存のクエリに開始日と終了日を追加する
     }
     return '&query=' + query;
   };
