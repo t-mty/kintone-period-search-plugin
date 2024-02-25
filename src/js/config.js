@@ -19,7 +19,7 @@ jQuery.noConflict();
   }
 
   var selectedViews = selectedViews = config.view.split(',');
-  console.log(config.view);
+  // console.log(config.view);
 
   //すべてのビューをチェックする
   if(selectedViews.indexOf('（すべて）') !== -1) {
@@ -103,7 +103,7 @@ jQuery.noConflict();
     }else{
       selectedView = '';
     }
-    console.log(selectedView);
+    // console.log(selectedView);
     
     //ドロップダウンで選択されたフィールド名を取得
     var selectedFieldName = $("#field-select").children("option:selected").text();
@@ -111,8 +111,8 @@ jQuery.noConflict();
     //ドロップダウンで選択されたフィールドコードを取得
     var selectedFieldCode = $("#field-select").children("option:selected").attr('id');
 
-    console.log(selectedFieldCode);
-    console.log(selectedFieldName);
+    // console.log(selectedFieldCode);
+    // console.log(selectedFieldName);
 
     //configのオブジェクトを設定する
     kintone.plugin.app.setConfig({

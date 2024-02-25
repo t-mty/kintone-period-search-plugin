@@ -14,7 +14,7 @@ jQuery.noConflict();
     if (viewArray.indexOf(e.viewName) == -1) return e;
 
     //すでに検索ボックスが設置されているときreturnする
-    console.log($('.day-search-span').length);
+    // console.log($('.day-search-span').length);
     if ($('.day-search-span').length !== 0) return e;
 
 
@@ -36,7 +36,7 @@ jQuery.noConflict();
 
     //現在のクエリ確認
     var query = kintone.app.getQueryCondition();
-    console.log(query);
+    // console.log(query);
 
   });
 })(jQuery, kintone.$PLUGIN_ID);
@@ -46,7 +46,7 @@ function settingForm(spaceElement, fieldName) {
   //フォーム親要素を指定
   var daySearchForm = document.createElement('span');
   daySearchForm.className = 'day-search-span';
-  daySearchForm.style = 'margin: 0 5px 0 0; padding: 10px; border: 1px solid; border-color: #E4E8DF; background-color: #F7F9FA; color: #848692'
+  daySearchForm.style = 'margin: 0 5px 0 0; padding: 11px; border: 1px solid; border-color: #E4E8DF; background-color: #F7F9FA; color: #848692'
   
   //開始日の入力フォームを設置
   var startCalender = document.createElement('input');
